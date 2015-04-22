@@ -40,6 +40,7 @@ int main(int argc, char* argv[])
 
 	// compute Damerau-Levenshtein distance
     Levenshtein L(isFile, argv);
+    L.compute();
 
     return 0;
 }

@@ -7,6 +7,8 @@
 #include <fstream>
 #include <array>
 #include <boost/tokenizer.hpp>
+#include <stdio.h>
+#include <string.h>
 
 class Levenshtein
 {
@@ -14,12 +16,12 @@ class Levenshtein
         Levenshtein(bool isFile, char* argv[]);
         virtual ~Levenshtein();
 
-		void compute();
+        void compute();
 
     private:
         std::vector<std::string> word1;
         std::vector<std::string> word2;
-		std::vector<int> dist;
+        std::vector<int> dist;
 };
 
 #endif /* !LEVENSHTEIN_H_ */
