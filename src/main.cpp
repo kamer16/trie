@@ -30,12 +30,15 @@ static bool parse_commandline(char* argv[])
 
 int main(int argc, char* argv[])
 {
+	// check number of arguments
     int error = check_arguments(argc);
     if (error == 1)
         return 1;
 
+	// check if input = file
     bool isFile = parse_commandline(argv);
 
+	// compute Damerau-Levenshtein distance
     Levenshtein L(isFile, argv);
 
     return 0;
