@@ -1,4 +1,6 @@
 TODO
 
-[ ] Implémenter l'algorithme
-[ ] Faire un parseur pour pouvoir prendre un fichier
+[ ] Créer le CMakeLists.txt
+[ ] Implémenter la structure du dictionnaire
+[X] Implémenter l'algorithme de distance entre deux mots
+[X] Faire un parseur pour pouvoir prendre un fichier
