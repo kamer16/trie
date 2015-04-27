@@ -10,7 +10,7 @@ CHK_SRC=${addprefix tests/, }
 CHK_OBJ=${CHK_SRC:.cc=.o}
 
 DIR=src/
-SRC=${addprefix ${DIR}, main.cpp Levenshtein.cpp}
+SRC=${addprefix ${DIR}, main.cpp Levenshtein.cpp Dictionnary.cpp Node.cpp}
 OBJ=${SRC:.cpp=.o}
 OUT=textMining
 
