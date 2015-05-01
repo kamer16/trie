@@ -1,9 +1,10 @@
 #include "Dictionnary.h"
 
 // Constructor
-Dictionnary::Dictionnary(char *words)
+Dictionnary::Dictionnary(char *words, char * output_dict)
 {
     words_ = words;
+	dict_ = output_dict;
 }
 
 // Destructor
