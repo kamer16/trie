@@ -17,7 +17,7 @@ class Dictionnary
 
     private:
         char *words_;
-		char *dict_;
+        char *dict_;
 };
 
 #endif /* !DICTIONNARY_H_ */

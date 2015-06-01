@@ -11,7 +11,7 @@ static int check_arguments(int argc)
     }
     else if (argc > 3)
     {
-        std::cout << "Too much arguments" << std::endl;
+        std::cout << "Too many arguments" << std::endl;
         return 1;
     }
 

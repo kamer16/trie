@@ -4,7 +4,7 @@
 Dictionnary::Dictionnary(char *words, char * output_dict)
 {
     words_ = words;
-	dict_ = output_dict;
+    dict_ = output_dict;
 }
 
 // Destructor

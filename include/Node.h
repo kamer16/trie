@@ -2,6 +2,7 @@
 # define NODE_H_
 
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -11,17 +12,13 @@ class Node
         Node();
         virtual ~Node();
 
-        string getLetters();
         int getFreq();
-
-        void setLetters(string letters);
         void setFreq(int freq);
 
+
     private:
-        string letters_;
+        std::vector<unsigned char> sons_;
         int freq_;
-        Node *leftNode_;
-        Node *rightNode_;
 };
 
 #endif /* !NODE_H_ */
