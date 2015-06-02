@@ -23,11 +23,9 @@ node::node(unsigned letter)
 
 void Trie::add_word(std::string& s)
 {
-  static const unsigned mask = 1 << (sizeof(unsigned) * 8 - 1);
-  static const unsigned not_mask = ~mask;
   // offset corresponds to index of first sun of previous node with letter s[i]
   unsigned offset = start_pos_[map_[s[0]]];
-  if (!offset)
+  if (offset == -1U)
     {
       // l corresponds to value of remapped letter
       unsigned l = map_[s[0]];
@@ -63,6 +61,7 @@ void Trie::add_word(std::string& s)
               nodes_.emplace_back(l);
             }
         }
+      assert(offset < 1 << 24);
     }
   // Set high bit to indicate end of word.
   // Note that top 10 bits are free
@@ -70,8 +69,33 @@ void Trie::add_word(std::string& s)
 }
 
 
+void Trie::print()
+{
+  unsigned mod = 0;
+  std::vector<char> inv(g_nb_letters);
+  for (unsigned i = 0; i < g_nb_letters; ++i)
+    {
+      inv[i] = g_letters[i];
+      if (start_pos_[i] != -1U)
+        std::cout << g_letters[i] << ": " << start_pos_[i] << ", ";
+    }
+  std::cout << '\n';
+  for (auto n: nodes_)
+    {
+      if (mod == 8)
+        std::cout << n.bits.sun << ',' << n.bits.brother << ','
+                  << inv[n.bits.letter] << ',' << n.bits.is_terminal << '\n';
+      else
+        std::cout << n.bits.sun << ',' << n.bits.brother << ','
+                  << inv[n.bits.letter] << ',' << n.bits.is_terminal << "  ";
+
+      mod = (mod + 1) % 9;
+    }
+  std::cout << '\n';
+}
+
 Trie::Trie(Dictionnary& dict)
-  : map_(256, -1), start_pos_(g_nb_letters, 0)
+  : map_(256, -1), start_pos_(g_nb_letters, -1U)
 {
   unsigned cnt = 0;
   for (unsigned i = 0; i < g_nb_letters; ++i)

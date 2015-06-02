@@ -16,4 +16,5 @@ int main(int argc, char* argv[])
     std::cerr << "Loading trie\n";
     Trie t(dict);
     std::cerr << "Number of nodes: " << t.nodes_.size() << std::endl;
+    t.print();
 }

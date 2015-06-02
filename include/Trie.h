@@ -31,6 +31,6 @@ public:
     Trie();
     // Map a letter to it's id.
     vector<unsigned char> map_;
-    vector<unsigned char> start_pos_;
+    vector<unsigned> start_pos_;
     vector<node> nodes_;
 };
