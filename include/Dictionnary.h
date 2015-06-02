@@ -3,21 +3,16 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include <boost/tokenizer.hpp>
 
 using namespace std;
 
 class Dictionnary
 {
-    public:
-        Dictionnary(char *words, char *output_dict);
-        virtual ~Dictionnary();
-
-        void extractWords();
-
-    private:
-        char *words_;
-        char *dict_;
+public:
+  Dictionnary(const char *file);
+  vector<pair<string, unsigned>> words;
 };
 
 #endif /* !DICTIONNARY_H_ */

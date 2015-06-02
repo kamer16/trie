@@ -1,34 +1,18 @@
+#include <string>
+
 #include "Dictionnary.h"
 
 // Constructor
-Dictionnary::Dictionnary(char *words, char * output_dict)
+Dictionnary::Dictionnary(const char *file)
 {
-    words_ = words;
-    dict_ = output_dict;
-}
-
-// Destructor
-Dictionnary::~Dictionnary()
-{
-}
-
-// Extracts words from the file words.txt
-void Dictionnary::extractWords()
-{
-    ifstream file(words_);
-
-    if (file.is_open())
+  fstream f(file);
+  string c;
+  unsigned freq;
+  f >> c >> freq;
+  while (!f.eof())
     {
-        string word;
-        while (getline(file, word))
-        {
-            boost::char_separator<char> sep(" ");
-            boost::tokenizer<boost::char_separator<char>> tok(word, sep);
-            for (const auto& t: tok)
-                cout << t << " ";
-            cout << endl;
-        }
+      words.emplace_back(move(c), freq);
+      f >> c >> freq;
     }
-    else
-        cout << "Unable to open " << words_ << endl;
+  sort(words.begin(), words.end());
 }
