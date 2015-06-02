@@ -21,6 +21,31 @@ node::node(unsigned letter)
   bits.letter = letter;
 }
 
+unsigned Trie::dfs(unsigned idx)
+{
+  unsigned res = 0;
+  do {
+      res += nodes_[idx].bits.is_terminal;
+      if (nodes_[idx].bits.sun)
+        res += dfs(idx + 1);
+      idx = nodes_[idx].bits.brother;
+    } while (idx);
+  return res;
+}
+
+unsigned Trie::count_words()
+{
+  unsigned res = 0;
+  for (auto idx: start_pos_)
+    {
+      if (idx != -1U)
+      {
+        res += dfs(idx);
+      }
+    }
+  return res;
+}
+
 void Trie::add_word(std::string& s)
 {
   // offset corresponds to index of first sun of previous node with letter s[i]

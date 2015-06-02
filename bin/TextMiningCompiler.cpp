@@ -4,6 +4,8 @@
 #include "Node.h"
 #include "Trie.h"
 
+#include <sys/time.h>
+
 using namespace std;
 
 int main(int argc, char* argv[])
@@ -16,5 +18,13 @@ int main(int argc, char* argv[])
     std::cerr << "Loading trie\n";
     Trie t(dict);
     std::cerr << "Number of nodes: " << t.nodes_.size() << std::endl;
-    t.print();
+
+    struct timeval start;
+    struct timeval end;
+    gettimeofday(&start, NULL);
+    t.count_words();
+    gettimeofday(&end, NULL);
+    std::cerr << "Number of words: " << t.count_words() << std::endl;
+    std::cerr << "BFS executed in: " << end.tv_usec - start.tv_usec
+              << " micro-seconds" << std::endl;
 }

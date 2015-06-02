@@ -26,7 +26,8 @@ public:
     void add_word(std::string& s);
     void print();
     void load(char* input);
-    unsigned num_sets();
+    unsigned dfs(unsigned idx);
+    unsigned count_words();
 
     Trie();
     // Map a letter to it's id.
