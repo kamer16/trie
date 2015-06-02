@@ -22,9 +22,15 @@ int main(int argc, char* argv[])
     struct timeval start;
     struct timeval end;
     gettimeofday(&start, NULL);
-    t.count_words();
+    t.bfs();
     gettimeofday(&end, NULL);
     std::cerr << "Number of words: " << t.count_words() << std::endl;
     std::cerr << "BFS executed in: " << end.tv_usec - start.tv_usec
+              << " micro-seconds" << std::endl;
+    gettimeofday(&start, NULL);
+    t.count_words();
+    gettimeofday(&end, NULL);
+    std::cerr << "Number of words: " << t.bfs() << std::endl;
+    std::cerr << "DFS executed in: " << end.tv_usec - start.tv_usec
               << " micro-seconds" << std::endl;
 }

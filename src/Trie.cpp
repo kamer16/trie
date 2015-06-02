@@ -2,6 +2,7 @@
 #include <fstream>
 #include <set>
 #include <cassert>
+#include <deque>
 
 #include "Trie.h"
 
@@ -19,6 +20,34 @@ node::node(unsigned letter)
   : value(0)
 {
   bits.letter = letter;
+}
+
+unsigned Trie::bfs()
+{
+  std::deque<unsigned> todo;
+  for (auto& idx: start_pos_)
+    {
+      if (idx != -1U)
+        todo.push_back(idx);
+    }
+  unsigned res = 0;
+  while(!todo.empty())
+  {
+    unsigned i = todo.front();
+    todo.pop_front();
+    res += nodes_[i].bits.is_terminal;
+    if (nodes_[i].bits.sun)
+      {
+        ++i;
+        todo.push_back(i);
+      while (nodes_[i].bits.brother)
+        {
+          todo.push_back(nodes_[i].bits.brother);
+          i = nodes_[i].bits.brother;
+        }
+      }
+  }
+  return res;
 }
 
 unsigned Trie::dfs(unsigned idx)

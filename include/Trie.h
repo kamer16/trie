@@ -26,6 +26,7 @@ public:
     void add_word(std::string& s);
     void print();
     void load(char* input);
+    unsigned bfs();
     unsigned dfs(unsigned idx);
     unsigned count_words();
 
