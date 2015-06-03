@@ -50,6 +50,33 @@ unsigned Trie::bfs()
   return res;
 }
 
+unsigned Trie::dfs_iter()
+{
+  unsigned res = 0;
+  std::vector<unsigned> stack;
+  for (auto idx: start_pos_)
+    {
+      if (idx == -1U)
+        continue;
+      // First element is a sentinelle as it will never be iterated on
+      stack.push_back(idx);
+      do {
+        node n = nodes_[idx];
+        res += n.bits.is_terminal;
+        if (n.bits.brother)
+          stack.push_back(n.bits.brother);
+        if (n.bits.sun)
+          ++idx;
+        else
+          {
+            idx = stack.back();
+            stack.pop_back();
+          }
+      } while (!stack.empty());
+    }
+  return res;
+}
+
 unsigned Trie::dfs(unsigned idx)
 {
   unsigned res = 0;

@@ -24,13 +24,19 @@ int main(int argc, char* argv[])
     gettimeofday(&start, NULL);
     t.bfs();
     gettimeofday(&end, NULL);
-    std::cerr << "Number of words: " << t.count_words() << std::endl;
+    std::cerr << "Number of words: " << t.bfs() << std::endl;
     std::cerr << "BFS executed in: " << end.tv_usec - start.tv_usec
               << " micro-seconds" << std::endl;
     gettimeofday(&start, NULL);
     t.count_words();
     gettimeofday(&end, NULL);
-    std::cerr << "Number of words: " << t.bfs() << std::endl;
+    std::cerr << "Number of words: " << t.count_words() << std::endl;
     std::cerr << "DFS executed in: " << end.tv_usec - start.tv_usec
+              << " micro-seconds" << std::endl;
+    gettimeofday(&start, NULL);
+    t.dfs_iter();
+    gettimeofday(&end, NULL);
+    std::cerr << "Number of words: " << t.dfs_iter() << std::endl;
+    std::cerr << "DFS_iter executed in: " << end.tv_usec - start.tv_usec
               << " micro-seconds" << std::endl;
 }

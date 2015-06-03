@@ -28,6 +28,7 @@ public:
     void load(char* input);
     unsigned bfs();
     unsigned dfs(unsigned idx);
+    unsigned dfs_iter();
     unsigned count_words();
 
     Trie();
