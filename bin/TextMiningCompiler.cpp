@@ -10,7 +10,7 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-    if (argc != 2)
+    if (argc <= 2)
         return 1;
 
     std::cerr << "Loading dictionary\n";
@@ -39,4 +39,5 @@ int main(int argc, char* argv[])
     std::cerr << "Number of words: " << t.dfs_iter() << std::endl;
     std::cerr << "DFS_iter executed in: " << end.tv_usec - start.tv_usec
               << " micro-seconds" << std::endl;
+    t.dump(argv[2]);
 }

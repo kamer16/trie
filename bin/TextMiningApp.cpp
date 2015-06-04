@@ -1,46 +1,66 @@
 #include <iostream>
+#include <cassert>
+#include <algorithm>
 
 #include "Levenshtein.h"
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 
-static int check_arguments(int argc)
+
+
+void test(char* test, std::string res)
 {
-    if (argc < 3)
+  levenshtein lev;
+  lev.other = std::string(test);
+  lev.w = lev.other.size() + 1;
+  std::vector<unsigned char> matrix(lev.w, 0);
+  unsigned val = 0;
+  for (auto& c: matrix)
+    c = val++;
+  for (auto c: res)
     {
-        std::cout << "Not enough arguments" << std::endl;
-        return 1;
+      lev.update_matrix(matrix, c);
+      lev.dump_matrix(matrix);
     }
-    else if (argc > 3)
-    {
-        std::cout << "Too many arguments" << std::endl;
-        return 1;
-    }
-
-    return 0;
-}
-
-static bool parse_commandline(char* argv[])
-{
-    std::string arg1(argv[1]);
-
-    if (arg1.compare("-file") == 0)
-        return true;
-    else
-        return false;
 }
 
 int main(int argc, char* argv[])
 {
-    // check number of arguments
-    int error = check_arguments(argc);
-    if (error == 1)
-        return 1;
+  //test("kitten", std::string("sitting"));
+  if (argc < 2)
+    return 1;
+  struct stat sb;
+  int fd = open(argv[1], O_RDONLY);
+  if (fstat(fd, &sb) == -1)
+    return -1;
 
-    // check if input = file
-    bool isFile = parse_commandline(argv);
-
-    // compute Damerau-Levenshtein distance
-    Levenshtein L(isFile, argv);
-    L.compute();
-
-    return 0;
+  void* addr = mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+  levenshtein lev;
+  lev.trie = static_cast<trie_bin*>(addr);
+  lev.update();
+  std::string approx;
+  std::cin >> approx >> lev.dist >> lev.other;
+  lev.w = 1 + lev.other.size();
+  assert(!approx.compare("approx"));
+  while (!std::cin.eof())
+    {
+      assert(!approx.compare("approx"));
+      // map letters to [0, 41]
+      lev.remap_word();
+      std::vector<std::pair<unsigned, std::string>> res = lev.compute();
+      sort(res.rbegin(), res.rend());
+      for (auto p: res)
+        {
+          std::cout << p.second << ' ' << p.first << std::endl;
+        }
+      std::cin >> approx >> lev.dist >> lev.other;
+      lev.w = 1 + lev.other.size();
+    }
+  std::cerr << sb.st_size << " is file size\n";
+  std::cerr << lev.trie->dfs_iter() << " is number of words size\n";
+  munmap(addr, sb.st_size);
+  return 0;
 }

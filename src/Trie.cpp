@@ -9,16 +9,25 @@
 // Sorted by highest frequency
 static const char g_letters[] =
 {
-'e', 'a', 'i', '1', '2', '3', 'r', 'o', 'n', '4', 's', '5', 't', '0', '6', 'l',
-'7', '8', '9', 'u', 'c', 'm', 'd', 'p', 'h', 'b', 'g', 'f', 'k', 'v', 'y', 'z',
-'x', 'w', 'j', '_', 'q', '.', '+', '&', '#',
+'#', '&', '+', '.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '_', 'a',
+'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
+'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 };
+//static const char g_letters[] =
+//{
+//'e', 'a', 'i', '1', '2', '3', 'r', 'o', 'n', '4', 's', '5', 't', '0', '6', 'l',
+//'7', '8', '9', 'u', 'c', 'm', 'd', 'p', 'h', 'b', 'g', 'f', 'k', 'v', 'y', 'z',
+//'x', 'w', 'j', '_', 'q', '.', '+', '&', '#',
+//};
 
 static const size_t g_nb_letters = sizeof (g_letters) / sizeof (char);
 
 node::node(unsigned letter)
-  : value(0)
 {
+  bits.brother = 0;
+  bits.sun = 0;
+  bits.is_terminal = 0;
+  freq = 0;
   bits.letter = letter;
 }
 
@@ -102,7 +111,7 @@ unsigned Trie::count_words()
   return res;
 }
 
-void Trie::add_word(std::string& s)
+void Trie::add_word(std::string& s, unsigned freq)
 {
   // offset corresponds to index of first sun of previous node with letter s[i]
   unsigned offset = start_pos_[map_[s[0]]];
@@ -147,6 +156,7 @@ void Trie::add_word(std::string& s)
   // Set high bit to indicate end of word.
   // Note that top 10 bits are free
   nodes_[offset].bits.is_terminal = 1;
+  nodes_[offset].freq = freq;
 }
 
 
@@ -183,6 +193,21 @@ Trie::Trie(Dictionnary& dict)
     map_[g_letters[i]] = cnt++;
   for (auto& p: dict.words)
     {
-      add_word(p.first);
+      add_word(p.first, p.second);
     }
+}
+
+void Trie::dump(const char* file)
+{
+  std::cerr << file << std::endl;
+  std::ofstream fs(file, ios::binary);
+  std::cerr << "Start_pos: " << start_pos_.size() << std::endl;
+  std::cerr << "Start_pos: " << start_pos_[0] << std::endl;
+  fs.write(reinterpret_cast<char*>(start_pos_.data()), sizeof (unsigned) *
+           start_pos_.size());
+  fs.write(reinterpret_cast<char*>(map_.data()), sizeof (unsigned char) *
+           256);
+  fs.write(reinterpret_cast<char*>(nodes_.data()),
+           sizeof (node) * nodes_.size());
+  fs.close();
 }
