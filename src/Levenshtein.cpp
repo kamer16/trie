@@ -62,7 +62,8 @@ std::vector<std::pair<unsigned, std::string>> levenshtein::compute()
             auto p = stack.back();
             idx = p.first;
             size = p.second;
-            matrix.resize(size * w);
+            // keep first sentinell row, and all following letters
+            matrix.resize((1 + size) * w);
             s.resize(size);
             stack.pop_back();
           }
