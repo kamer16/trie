@@ -1,4 +1,5 @@
 #include "Levenshtein.h"
+#include <tuple>
 
 // TODO handle swap of letters
 void levenshtein::update_matrix(std::vector<unsigned char>& matrix,
@@ -30,7 +31,7 @@ std::vector<std::pair<unsigned, std::string>> levenshtein::compute()
 {
   std::vector<std::pair<unsigned, std::string>> res;
   std::string s;
-  std::vector<std::pair<unsigned, unsigned>> stack;
+  std::vector<std::tuple<unsigned, unsigned char, unsigned char>> stack;
   for (unsigned i = 0; i < 41; ++i)
     {
       unsigned idx = trie->start_pos[i];
@@ -43,9 +44,9 @@ std::vector<std::pair<unsigned, std::string>> levenshtein::compute()
         c = val++;
       // END INIT MATRIX ///////
       // First element is a sentinelle as it will never be iterated on
-      unsigned size = 0;
+      unsigned char size = 0;
       unsigned char old_let = 0;
-      stack.emplace_back(idx, size);
+      stack.emplace_back(idx, size, old_let);
       do {
         bits n = trie->nodes[idx];
         s.push_back(to_char[n.letter]);
@@ -53,7 +54,7 @@ std::vector<std::pair<unsigned, std::string>> levenshtein::compute()
         if (n.brother)
           {
             unsigned b = n.brother;
-            stack.emplace_back(b, size);
+            stack.emplace_back(b, size, old_let);
           }
         if (n.is_terminal && matrix.back() <= dist)
           {
@@ -68,8 +69,9 @@ std::vector<std::pair<unsigned, std::string>> levenshtein::compute()
         else
           {
             auto p = stack.back();
-            idx = p.first;
-            size = p.second;
+            idx = std::get<0>(p);
+            size = std::get<1>(p);
+            old_let = std::get<2>(p);
             // keep first sentinell row, and all following letters
             matrix.resize((1 + size) * w);
             s.resize(size);
