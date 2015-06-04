@@ -2,21 +2,27 @@
 
 // TODO handle swap of letters
 void levenshtein::update_matrix(std::vector<unsigned char>& matrix,
-                                unsigned char letter)
+                                unsigned char letter,
+                                unsigned char old_let)
 {
   unsigned back = matrix.size();
   matrix.resize(back + w);
   matrix[back] = matrix[back - w] + 1;
   for (unsigned i = 1; i < w; ++i)
     {
+      unsigned char dst = 1;
       if (letter == other[i - 1])
-        matrix[back + i] = matrix[back + i - w - 1];
-      else
-        {
-          unsigned char m = std::min(matrix[back + i - w], matrix[back + i - 1]);
-          m = std::min(matrix[back + i - w - 1], m);
-          matrix[back + i] = m + 1;
-        }
+        dst = 0;
+      unsigned char m = std::min(1 + matrix[back + i - w],
+                                 1 + matrix[back + i - 1]);
+      unsigned char lv = dst + matrix[back + i - w - 1];
+      matrix[back + i] = std::min(lv, m);
+      if (i > 1 && back / w > 1 && letter == other[i - 2] &&
+          old_let == other[i - 1])
+      {
+        unsigned char lv = matrix[back + i - 2 * w - 2] + dst;
+        matrix[back + i] = std::min(lv, matrix[back + i]);
+      }
     }
 }
 
@@ -38,11 +44,12 @@ std::vector<std::pair<unsigned, std::string>> levenshtein::compute()
       // END INIT MATRIX ///////
       // First element is a sentinelle as it will never be iterated on
       unsigned size = 0;
+      unsigned char old_let = 0;
       stack.emplace_back(idx, size);
       do {
         bits n = trie->nodes[idx];
         s.push_back(to_char[n.letter]);
-        update_matrix(matrix, n.letter);
+        update_matrix(matrix, n.letter, old_let);
         if (n.brother)
           {
             unsigned b = n.brother;
@@ -52,6 +59,7 @@ std::vector<std::pair<unsigned, std::string>> levenshtein::compute()
           {
             res.emplace_back(n.freq, s);
           }
+        old_let = n.letter;
         if (n.sun)
           {
             ++idx;

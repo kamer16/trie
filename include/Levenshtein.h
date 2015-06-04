@@ -35,7 +35,8 @@ public:
   void remap_word();
   std::vector<std::pair<unsigned, std::string>> compute();
   void update();
-  void update_matrix(std::vector<unsigned char>& matrix, unsigned char letter);
+  void update_matrix(std::vector<unsigned char>& matrix, unsigned char letter,
+                     unsigned char old_let);
   void dump_matrix(std::vector<unsigned char>& matrix);
   std::string other;
   char to_char[41];

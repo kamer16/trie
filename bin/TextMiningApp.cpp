@@ -10,6 +10,14 @@
 #include <unistd.h>
 
 
+bool compare(std::pair<unsigned, std::string> lhs,
+             std::pair<unsigned, std::string> rhs)
+{
+  if (lhs.first == rhs.first)
+    return lhs.second < rhs.second;
+  else
+    return lhs.first > rhs.first;
+}
 
 void test(char* test, std::string res)
 {
@@ -20,16 +28,19 @@ void test(char* test, std::string res)
   unsigned val = 0;
   for (auto& c: matrix)
     c = val++;
-  for (auto c: res)
+  for (unsigned i = 0; i < res.size(); ++i)
     {
-      lev.update_matrix(matrix, c);
+      if (i > 0)
+        lev.update_matrix(matrix, res[i], res[i - 1]);
+      else
+        lev.update_matrix(matrix, res[i], 0);
       lev.dump_matrix(matrix);
     }
 }
 
 int main(int argc, char* argv[])
 {
-  //test("kitten", std::string("sitting"));
+  test("kries", std::string("crise"));
   if (argc < 2)
     return 1;
   struct stat sb;
@@ -51,7 +62,7 @@ int main(int argc, char* argv[])
       // map letters to [0, 41]
       lev.remap_word();
       std::vector<std::pair<unsigned, std::string>> res = lev.compute();
-      sort(res.rbegin(), res.rend());
+      stable_sort(res.begin(), res.end(), compare);
       for (auto p: res)
         {
           std::cout << p.second << ' ' << p.first << std::endl;
